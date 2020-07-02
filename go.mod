@@ -1,6 +1,6 @@
-module github.com/karelhala/hackaton-2020
+module github.com/Hyperkid123/server-sent-events-service
 
-go 1.13
+go 1.14
 
 require (
 	github.com/confluentinc/confluent-kafka-go v1.4.2 // indirect

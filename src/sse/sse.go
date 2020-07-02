@@ -1,4 +1,4 @@
-package main
+package sse
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 )
 
 type SSEMessage struct {
-	room          string
-	accountNumber string
+	Room          string
+	AccountNumber string
 }
 
 var MessageChannels = make(map[chan []byte]SSEMessage)
@@ -29,8 +29,8 @@ func ListenHandler(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var sseChannel SSEMessage
-	sseChannel.accountNumber = req.URL.Query().Get("account_number")
-	sseChannel.room = req.URL.Query().Get("room")
+	sseChannel.AccountNumber = req.URL.Query().Get("account_number")
+	sseChannel.Room = req.URL.Query().Get("room")
 
 	_messageChannel := make(chan []byte)
 	MessageChannels[_messageChannel] = sseChannel
