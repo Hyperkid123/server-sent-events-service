@@ -1,4 +1,4 @@
-package main
+package enhancers
 
 import (
 	"encoding/json"

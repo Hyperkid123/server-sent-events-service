@@ -1,13 +1,15 @@
-package main
+package kafkaconnector
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/Hyperkid123/server-sent-events-service/src/topics"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
-func ConnectKafka(topicsConfig map[string]Topics, fp func(*kafka.Message, Topics)) {
+// ConnectKafka provides messages to the SSE service
+func ConnectKafka(topicsConfig map[string]topics.Topics, fp func(*kafka.Message, topics.Topics)) {
 	broker := os.Getenv("KAFKA_BROKER")
 	group := os.Getenv("KAFKA_GROUP")
 
@@ -41,7 +43,6 @@ func ConnectKafka(topicsConfig map[string]Topics, fp func(*kafka.Message, Topics
 	}
 
 	fmt.Println("Listening on topics", topics)
-
 
 	err = c.SubscribeTopics(topics, nil)
 
