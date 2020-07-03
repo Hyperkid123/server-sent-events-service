@@ -1,0 +1,8 @@
+language: go
+
+go:
+- 1.14
+
+go_import_path: github.com/Hyperkid123/server-sent-events-service
+
+script: go test -v ./...
