@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Hyperkid123/server-sent-events-service/src/enhancers"
+	"github.com/Hyperkid123/server-sent-events-service/src/conditions"
 	"github.com/Hyperkid123/server-sent-events-service/src/kafkaconnector"
 	"github.com/Hyperkid123/server-sent-events-service/src/sse"
 	"github.com/Hyperkid123/server-sent-events-service/src/topics"
@@ -44,15 +44,15 @@ func sendToListener(kafkaMessage *kafka.Message, topic topics.Topics) {
 		topic.Event = "notification"
 	}
 
-	enhancers := map[string](func(string, string) bool){
-		"inventory": enhancers.InventoryEnhancer,
-		"approval":  enhancers.ApprovalEnhancer,
+	conditions := map[string](func(string, string) bool){
+		"inventory": conditions.InventoryCondition,
+		"approval":  conditions.ApprovalCondition,
 	}
 	go func() {
 		for messageChannel, connectorInfo := range sse.MessageChannels {
 			canSend := true
-			for i := 0; i < len(topic.Enhancers); i++ {
-				canSend = enhancers[topic.Enhancers[i]](string(kafkaMessage.Value), connectorInfo.AccountNumber)
+			for i := 0; i < len(topic.Conditions); i++ {
+				canSend = conditions[topic.Conditions[i]](string(kafkaMessage.Value), connectorInfo.AccountNumber)
 			}
 			if canSend {
 				msg := sse.FormatSSE(topic.Event, string(kafkaMessage.Value))

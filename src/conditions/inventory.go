@@ -1,4 +1,4 @@
-package enhancers
+package conditions
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ type InventoryMessage struct {
 	InventoryHost Host `json:"host"`
 }
 
-func InventoryEnhancer(msg string, accountNumber string) bool {
+func InventoryCondition(msg string, accountNumber string) bool {
 	var formatted InventoryMessage
 	json.Unmarshal([]byte(msg), &formatted)
 
