@@ -10,6 +10,7 @@ import (
 
 	"github.com/Hyperkid123/server-sent-events-service/src/conditions"
 	"github.com/Hyperkid123/server-sent-events-service/src/kafkaconnector"
+	"github.com/Hyperkid123/server-sent-events-service/src/mutators"
 	"github.com/Hyperkid123/server-sent-events-service/src/sse"
 	"github.com/Hyperkid123/server-sent-events-service/src/topics"
 	"github.com/gobuffalo/packr"
@@ -48,14 +49,25 @@ func sendToListener(kafkaMessage *kafka.Message, topic topics.Topics) {
 		"inventory": conditions.InventoryCondition,
 		"approval":  conditions.ApprovalCondition,
 	}
+
+	mutators := map[string](func([]byte) []byte){
+		"approval": mutators.ApprovalMutator,
+	}
+
 	go func() {
 		for messageChannel, connectorInfo := range sse.MessageChannels {
 			canSend := true
+			responseMessage := kafkaMessage.Value
 			for i := 0; i < len(topic.Conditions); i++ {
 				canSend = conditions[topic.Conditions[i]](string(kafkaMessage.Value), connectorInfo.AccountNumber)
 			}
+
+			for i := 0; i < len(topic.Mutators); i++ {
+				responseMessage = mutators[topic.Conditions[i]](responseMessage)
+			}
+
 			if canSend {
-				msg := sse.FormatSSE(topic.Event, string(kafkaMessage.Value))
+				msg := sse.FormatSSE(topic.Event, string(responseMessage))
 				if topic.Room == "" {
 					fmt.Println("No room, broadcasting!")
 					messageChannel <- msg
