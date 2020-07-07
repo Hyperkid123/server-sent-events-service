@@ -2,10 +2,12 @@
     "topic": "platform.inventory.events",
     "room": "inventory",
     "event": "notification",
-    "enhancers": [ "inventory" ]
+    "conditions": [ "inventory" ],
+    "mutators": []
 }, {
     "topic": "platform.approval",
     "room": "approval",
     "event": "approval-test",
-    "enhancers": [ "approval" ]
+    "conditions": [ "approval" ],
+    "mutators": ["approval"]
 } ]
