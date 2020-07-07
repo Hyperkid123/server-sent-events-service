@@ -28,6 +28,7 @@ func ConnectKafka(topicsConfig map[string]topics.Topics, fp func(*kafka.Message,
 		"broker.address.family": "v4",
 		"group.id":              group,
 		"session.timeout.ms":    6000,
+		"enable.auto.commit":    false,
 		"auto.offset.reset":     "latest"})
 
 	if err != nil {
